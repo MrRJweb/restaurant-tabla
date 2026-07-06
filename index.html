@@ -1,18 +1,782 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0B0B0A" />
-    <title>Restaurant Tabla — Fine cuisine indienne · Montréal</title>
-    <meta name="description" content="Restaurant Tabla — fine Indian cuisine in Montréal's Village since 2004. Apportez votre vin · Tandoori · Table d'hôte. 1329 Rue Sainte-Catherine E." />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🥘</text></svg>" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0B0B0A" />
+<title>Restaurant Tabla — Fine cuisine indienne · Montréal</title>
+<meta name="description" content="Restaurant Tabla — fine Indian cuisine in Montréal's Village since 2004. Apportez votre vin · Tandoori · Table d'hôte. 1329 Rue Sainte-Catherine E." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🥘</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ═══════════ Design tokens ═══════════ */
+:root{
+  --obsidian:#0B0B0A; --ink:#111110; --card:#131210; --panel:#0E0D0B;
+  --gold:#D4AF37; --gold-light:#F0D98A; --gold-dark:#C29A2B;
+  --cream:#EDE8DF; --mut:#9A958B; --dim:#6E6A62; --faint:#4A4741;
+  --line:rgba(255,255,255,.06); --gold-line:rgba(212,175,55,.4);
+  --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --body:'Jost',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--obsidian);color:var(--cream);font-family:var(--body);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:#000}
+img,svg{display:block}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.icon{width:1em;height:1em;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.wrap{padding:0 32px}}
+section{scroll-margin-top:90px}
+
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--gold)}
+.eyebrow::before{content:"";height:1px;width:32px;background:rgba(212,175,55,.6)}
+.eyebrow.center{justify-content:center}
+.eyebrow.center::after{content:"";height:1px;width:32px;background:rgba(212,175,55,.6)}
+h1,h2,h3{font-family:var(--display);font-weight:500}
+.h2{font-size:clamp(32px,5vw,48px);line-height:1.1;margin-top:22px}
+.lead{margin-top:16px;font-size:15px;line-height:1.85;color:var(--mut);max-width:520px}
+.ornament{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 0}
+.ornament::before,.ornament::after{content:"";height:1px;width:64px}
+.ornament::before{background:linear-gradient(90deg,transparent,rgba(212,175,55,.5))}
+.ornament::after{background:linear-gradient(270deg,transparent,rgba(212,175,55,.5))}
+.ornament span{width:6px;height:6px;background:rgba(212,175,55,.8);transform:rotate(45deg)}
+
+/* ═══════════ Animations ═══════════ */
+[data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+[data-reveal].revealed{opacity:1;transform:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.fade-up{animation:fadeUp .9s cubic-bezier(.2,.7,.2,1) both}
+.d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}.d4{animation-delay:.55s}.d5{animation-delay:.7s}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes floaty{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-10px)}}
+@keyframes ember{0%,100%{opacity:.55}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+  [data-reveal]{opacity:1;transform:none}
+}
+
+/* ═══════════ Header ═══════════ */
+header{position:fixed;inset:0 0 auto;z-index:50;transition:all .5s}
+header.scrolled{background:rgba(11,11,10,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);box-shadow:0 8px 40px -16px rgba(0,0,0,.9)}
+.header-in{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1160px;margin:0 auto}
+@media(min-width:640px){.header-in{padding:14px 32px}}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-drum{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--gold-line);color:var(--gold);transition:transform .5s,border-color .5s;font-size:15px}
+.brand:hover .brand-drum{transform:rotate(12deg);border-color:var(--gold)}
+.brand-name{font-family:var(--display);font-size:24px;font-weight:500;letter-spacing:.02em}
+.brand-city{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:none}
+@media(min-width:640px){.brand-city{display:inline}}
+.topnav{display:none;gap:32px}
+@media(min-width:820px){.topnav{display:flex}}
+.topnav button{position:relative;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);padding:4px 0;transition:color .3s}
+.topnav button::after{content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;background:var(--gold);transition:width .3s}
+.topnav button:hover{color:var(--cream)}
+.topnav button:hover::after{width:100%}
+.header-right{display:flex;align-items:center;gap:12px}
+.lang-toggle{display:flex;border:1px solid rgba(255,255,255,.1);border-radius:999px;overflow:hidden;font-size:11px;font-weight:500;letter-spacing:.12em}
+.lang-toggle button{padding:6px 12px;text-transform:uppercase;color:var(--mut);transition:all .3s}
+.lang-toggle button.active{background:var(--gold);color:#000}
+.cta-mini{display:none;border:1px solid rgba(212,175,55,.6);border-radius:999px;padding:8px 20px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);transition:all .3s}
+.cta-mini:hover{background:var(--gold);color:#000;box-shadow:0 0 30px -8px var(--gold)}
+@media(min-width:820px){.cta-mini{display:inline-block}}
+.burger{color:#d4d0c8;display:flex}
+@media(min-width:820px){.burger{display:none}}
+.drawer{display:none;border-top:1px solid var(--line);background:rgba(11,11,10,.95);backdrop-filter:blur(16px);padding:8px 24px 16px}
+.drawer.open{display:block}
+.drawer button{display:block;width:100%;text-align:left;padding:12px 0;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#c9c5bd;transition:color .3s}
+.drawer button:hover{color:var(--gold)}
+
+/* ═══════════ Hero ═══════════ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(130% 95% at 72% 8%,#42300F 0%,#1D1508 38%,#0B0B0A 78%)}
+.hero-dots{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(circle at 1px 1px,var(--gold) 1px,transparent 0);background-size:38px 38px}
+.ember1,.ember2,.ember3{position:absolute;border-radius:50%;animation:ember 6s ease-in-out infinite}
+.ember1{right:-160px;top:64px;width:560px;height:560px;background:rgba(212,175,55,.08);filter:blur(130px)}
+.ember2{left:-110px;bottom:0;width:380px;height:380px;background:rgba(138,59,18,.14);filter:blur(110px);animation-delay:3s}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(0deg,var(--obsidian),transparent 45%,rgba(11,11,10,.7))}
+.mandala{position:absolute;right:-190px;top:50%;translate:0 -50%;width:760px;height:760px;opacity:.14;animation:spinSlow 70s linear infinite;display:none}
+@media(min-width:1024px){.mandala{display:block}}
+.hero-in{position:relative;z-index:2;width:100%;max-width:1160px;margin:0 auto;padding:160px 20px 130px}
+@media(min-width:640px){.hero-in{padding:160px 32px 120px}}
+.hero h1{font-size:clamp(44px,10.5vw,104px);line-height:.95;letter-spacing:-.01em;margin-top:24px}
+.hero h1 em{background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{margin-top:26px;max-width:560px;font-size:17px;line-height:1.7;color:#c9c5bd}
+.hero-ctas{margin-top:40px;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.hero-ctas{flex-direction:row;align-items:center}}
+.btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:999px;padding:16px 32px;background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:#000;font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;transition:all .3s}
+.btn-gold:hover{transform:scale(1.03);box-shadow:0 0 44px -8px var(--gold)}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:999px;padding:16px 32px;border:1px solid rgba(255,255,255,.2);font-size:13px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;transition:all .3s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-ghost:hover .icon{transform:translateX(4px)}
+.btn-ghost .icon{transition:transform .3s}
+.hero-perks{margin-top:48px;display:flex;flex-wrap:wrap;gap:12px 32px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
+.hero-perks span{display:flex;align-items:center;gap:8px}
+.hero-perks .icon{color:var(--gold);font-size:14px}
+.scroll-cue{position:absolute;bottom:96px;left:50%;z-index:2;display:none;flex-direction:column;align-items:center;gap:8px;color:var(--dim);font-size:9px;letter-spacing:.35em;text-transform:uppercase;animation:floaty 5s ease-in-out infinite;transition:color .3s}
+.scroll-cue:hover{color:var(--gold)}
+@media(min-width:820px){.scroll-cue{display:flex}}
+
+/* ═══════════ Marquee ═══════════ */
+.marquee{overflow:hidden;border-top:1px solid rgba(212,175,55,.15);border-bottom:1px solid rgba(212,175,55,.15);background:#100E09;padding:16px 0}
+.marquee-track{display:flex;width:max-content;align-items:center;gap:32px;animation:marquee 32s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-track span{display:flex;align-items:center;gap:32px;white-space:nowrap;font-family:var(--display);font-style:italic;font-size:18px;letter-spacing:.02em;color:rgba(212,175,55,.7)}
+.marquee-track span::after{content:"";width:4px;height:4px;background:rgba(212,175,55,.5);transform:rotate(45deg)}
+
+/* ═══════════ About ═══════════ */
+.about{background:var(--ink)}
+.about-grid{display:grid;gap:56px;padding:96px 0}
+@media(min-width:1024px){.about-grid{grid-template-columns:1fr 1fr;gap:80px;padding:128px 0}}
+.about p{margin-top:20px;font-size:15px;line-height:1.9;color:var(--mut)}
+.about-byow{margin-top:32px;display:flex;align-items:center;gap:12px;color:var(--gold);font-family:var(--display);font-style:italic;font-size:21px}
+.stats{align-self:center;display:flex;flex-direction:column;gap:1px;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.stat{display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--obsidian);padding:28px 32px;transition:background .5s}
+.stat:hover{background:#17130C}
+.stat b{font-family:var(--display);font-weight:500;font-size:clamp(34px,4vw,46px);color:var(--gold)}
+.stat span{max-width:190px;text-align:right;font-size:11px;line-height:1.8;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);transition:color .5s}
+.stat:hover span{color:#c9c5bd}
+
+/* ═══════════ Menu ═══════════ */
+.menu-sec{border-top:1px solid var(--line);padding:96px 0}
+@media(min-width:1024px){.menu-sec{padding:128px 0}}
+.menu-head{display:flex;flex-direction:column;gap:32px}
+@media(min-width:820px){.menu-head{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{border-radius:999px;padding:10px 20px;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);color:var(--mut);transition:all .3s}
+.filters button:hover{border-color:rgba(212,175,55,.5);color:var(--cream)}
+.filters button.active{background:var(--gold);border-color:var(--gold);color:#000;box-shadow:0 0 24px -6px var(--gold)}
+.menu-grid{margin-top:56px;display:grid;gap:20px}
+@media(min-width:640px){.menu-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1024px){.menu-grid{grid-template-columns:1fr 1fr 1fr}}
+.dish{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card);transition:transform .5s,border-color .5s,box-shadow .5s}
+.dish:hover{transform:translateY(-6px);border-color:var(--gold-line);box-shadow:0 28px 70px -24px rgba(212,175,55,.28)}
+.dish-art{position:relative;height:145px;overflow:hidden}
+.dish-art::before{content:"";position:absolute;inset:0;opacity:.12;background-image:radial-gradient(circle at 1px 1px,var(--gold) 1px,transparent 0);background-size:22px 22px}
+.dish-art::after{content:"";position:absolute;inset:auto 0 0;height:48px;background:linear-gradient(0deg,var(--card),transparent)}
+.dish-glyph{position:absolute;right:-8px;bottom:-26px;font-family:var(--display);font-size:120px;line-height:1;color:rgba(212,175,55,.22);transition:transform .7s,color .7s;user-select:none}
+.dish:hover .dish-glyph{transform:rotate(-6deg) scale(1.1);color:rgba(212,175,55,.4)}
+.dish-price{position:absolute;left:16px;top:16px;border-radius:999px;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);padding:4px 12px;font-family:var(--display);font-size:18px;color:var(--gold-light)}
+.dish-star{position:absolute;right:16px;top:16px;display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:var(--gold);color:#000;padding:5px 10px;font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase}
+.dish-body{display:flex;flex:1;flex-direction:column;justify-content:space-between;padding:24px}
+.dish h3{font-size:23px;line-height:1.3;transition:color .3s}
+.dish:hover h3{color:var(--gold)}
+.dish-desc{margin-top:8px;font-size:14px;line-height:1.7;color:var(--dim);transition:color .3s}
+.dish:hover .dish-desc{color:var(--mut)}
+.dish-tags{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(0,0,0,.3);padding:4px 10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--mut);transition:all .3s}
+.dish:hover .tag{border-color:var(--gold-line);color:var(--gold)}
+.menu-note{margin-top:40px;display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
+.menu-note .icon{color:var(--gold);font-size:14px}
+
+/* ═══════════ Testimonials ═══════════ */
+.reviews{border-top:1px solid var(--line);background:var(--ink);padding:96px 0}
+.rev-grid{margin-top:40px;display:grid;gap:20px}
+@media(min-width:820px){.rev-grid{grid-template-columns:1fr 1fr 1fr}}
+.rev{border:1px solid var(--line);border-radius:18px;background:var(--obsidian);padding:32px;transition:transform .5s,border-color .5s}
+.rev:hover{transform:translateY(-4px);border-color:rgba(212,175,55,.3)}
+.rev-mark{font-family:var(--display);font-size:56px;line-height:.6;color:rgba(212,175,55,.4);transition:color .5s}
+.rev:hover .rev-mark{color:var(--gold)}
+.rev blockquote{margin-top:18px;font-family:var(--display);font-style:italic;font-weight:400;font-size:20px;line-height:1.6;color:#c9c5bd}
+.rev-foot{margin-top:24px;display:flex;align-items:center;justify-content:space-between}
+.rev-src{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
+.rev-stars{color:var(--gold);letter-spacing:2px;font-size:12px}
+
+/* ═══════════ Booking ═══════════ */
+.book-sec{position:relative;border-top:1px solid var(--line);overflow:hidden;padding:96px 0}
+@media(min-width:1024px){.book-sec{padding:128px 0}}
+.book-glow{position:absolute;left:50%;top:0;translate:-50% 0;width:640px;height:290px;border-radius:50%;background:rgba(212,175,55,.05);filter:blur(110px);animation:ember 6s ease-in-out infinite}
+.book-wrap{position:relative;max-width:820px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.book-wrap{padding:0 32px}}
+.book-card{margin-top:56px;border:1px solid rgba(255,255,255,.08);border-radius:24px;background:rgba(14,13,11,.9);box-shadow:0 40px 100px -40px rgba(0,0,0,.95);overflow:hidden}
+.book-row{padding:28px 24px;border-bottom:1px solid var(--line)}
+.book-row:last-child{border-bottom:none}
+@media(min-width:640px){.book-row{padding:28px 40px}}
+.book-label{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
+.book-label .icon{color:var(--gold);font-size:14px}
+.guest-row{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.guest-row button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.1);font-size:14px;font-weight:500;color:var(--mut);transition:all .3s}
+.guest-row button:hover{border-color:rgba(212,175,55,.5);color:var(--cream)}
+.guest-row button.active{background:var(--gold);border-color:var(--gold);color:#000;transform:scale(1.05);box-shadow:0 0 20px -6px var(--gold)}
+.bday{margin-top:16px;display:none;align-items:flex-start;gap:8px;font-size:12px;line-height:1.7;color:rgba(212,175,55,.9)}
+.bday.show{display:flex}
+.date-row{margin-top:16px;display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}
+.date-row button{flex:none;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 16px;font-size:12px;letter-spacing:.03em;text-transform:capitalize;color:var(--mut);transition:all .3s}
+.date-row button:hover:not(:disabled){border-color:rgba(212,175,55,.5);color:var(--cream)}
+.date-row button.active{border-color:var(--gold);background:rgba(212,175,55,.1);color:var(--gold)}
+.date-row button:disabled{border-color:rgba(255,255,255,.04);color:var(--faint);text-decoration:line-through;cursor:not-allowed}
+.slot-hint{margin-top:16px;font-size:14px;color:var(--faint)}
+.slot-group{margin-top:16px}
+.slot-group h4{margin-bottom:8px;font-family:var(--body);font-weight:400;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--faint)}
+.slot-list{display:flex;flex-wrap:wrap;gap:8px}
+.slot-list button{border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 16px;font-size:14px;color:var(--mut);transition:all .3s}
+.slot-list button:hover{border-color:rgba(212,175,55,.5);color:var(--cream)}
+.slot-list button.active{background:var(--gold);border-color:var(--gold);color:#000}
+.confirm-btn{width:100%;border-radius:999px;padding:16px;font-size:13px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;background:rgba(255,255,255,.05);color:var(--faint);cursor:not-allowed;transition:all .3s}
+.confirm-btn.ready{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:#000;cursor:pointer}
+.confirm-btn.ready:hover{transform:scale(1.01);box-shadow:0 0 44px -10px var(--gold)}
+.book-done{display:none;flex-direction:column;align-items:center;text-align:center;padding:64px 32px}
+.book-done.show{display:flex}
+.done-ring{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:rgba(212,175,55,.15);box-shadow:inset 0 0 0 1px var(--gold-line);color:var(--gold)}
+.book-done h3{margin-top:24px;font-size:30px}
+.done-sum{margin-top:12px;font-size:14px;color:var(--mut)}
+.done-note{margin-top:16px;max-width:360px;font-size:14px;line-height:1.7;color:var(--dim)}
+.done-note a{color:var(--gold)}
+.done-note a:hover{text-decoration:underline}
+.again-btn{margin-top:32px;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:12px 24px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#c9c5bd;transition:all .3s}
+.again-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ═══════════ Hours & Location ═══════════ */
+.hours-sec{border-top:1px solid var(--line);background:var(--ink);padding:96px 0}
+@media(min-width:1024px){.hours-sec{padding:128px 0}}
+.info-grid{margin-top:56px;display:grid;gap:20px}
+@media(min-width:1024px){.info-grid{grid-template-columns:1fr 1fr 1fr}}
+.info-card{border:1px solid var(--line);border-radius:18px;background:var(--obsidian);padding:32px;transition:border-color .5s}
+.info-card:hover{border-color:rgba(212,175,55,.25)}
+.info-card>.book-label{color:var(--gold)}
+.hours-list{margin-top:24px;list-style:none}
+.hours-list li{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:8px 0;font-size:14px}
+.hours-list li span:first-child{color:#c9c5bd}
+.hours-list li span:last-child{text-align:right;color:var(--mut)}
+.hours-list li.closed span:last-child{color:var(--faint)}
+.addr{margin-top:24px;font-family:var(--display);font-style:normal;font-size:24px;line-height:1.5}
+.metro{margin-top:12px;font-size:12px;color:var(--dim)}
+.dir-btn{margin-top:24px;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:10px 20px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#c9c5bd;transition:all .3s}
+.dir-btn:hover{border-color:var(--gold);color:var(--gold)}
+.phone-big{margin-top:24px;display:inline-block;font-family:var(--display);font-size:30px;transition:color .3s}
+.phone-big:hover{color:var(--gold)}
+.socials{margin-top:24px;display:flex;gap:12px}
+.socials a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid rgba(255,255,255,.1);border-radius:50%;color:var(--mut);transition:all .3s}
+.socials a:hover{transform:translateY(-2px);border-color:var(--gold);color:var(--gold)}
+
+/* ═══════════ Footer & bottom nav ═══════════ */
+footer{border-top:1px solid var(--line);padding:56px 0 128px}
+@media(min-width:820px){footer{padding-bottom:48px}}
+.foot-grid{display:grid;gap:40px}
+@media(min-width:820px){.foot-grid{grid-template-columns:1fr 1fr 1fr}}
+.foot-brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:28px}
+.foot-brand .icon{color:var(--gold);font-size:20px}
+.foot-tag{margin-top:8px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
+.foot-h{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.foot-links{margin-top:16px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.foot-links button,.foot-contact a{font-size:14px;color:var(--mut);transition:color .3s}
+.foot-links button:hover,.foot-contact a:hover{color:var(--gold)}
+.foot-contact{margin-top:16px;font-size:14px;line-height:1.9;color:var(--mut)}
+.foot-base{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 24px;font-size:12px;color:var(--faint)}
+@media(min-width:820px){.foot-base{flex-direction:row}}
+.top-btn{display:flex;align-items:center;gap:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);transition:color .3s}
+.top-btn:hover{color:var(--gold)}
+
+.bottom-nav{position:fixed;left:16px;right:16px;bottom:16px;z-index:50}
+@media(min-width:820px){.bottom-nav{display:none}}
+.bottom-nav-in{display:flex;max-width:420px;margin:0 auto;border:1px solid rgba(212,175,55,.2);border-radius:18px;background:rgba(20,18,14,.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 16px 48px -12px rgba(0,0,0,.9);padding:8px}
+.bottom-nav-in button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border-radius:12px;transition:transform .2s}
+.bottom-nav-in button:active{transform:scale(.95)}
+.bottom-nav-in .icon{font-size:19px;color:var(--mut);transition:color .3s}
+.bottom-nav-in span{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);transition:color .3s}
+.bottom-nav-in button:hover .icon,.bottom-nav-in button:active .icon,
+.bottom-nav-in button:hover span,.bottom-nav-in button:active span{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SVG icon sprite ═══════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.8.6a2 2 0 0 1 1.8 2.1Z"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><path d="M3 2v7a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+  <symbol id="i-wine" viewBox="0 0 24 24"><path d="M8 22h8M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8a10 10 0 0 1-10 10Z"/><path d="M2 21c0-3 1.9-5.5 5.5-6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1L12 2Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2L12 3ZM19 17l.9 2.1L22 20l-2.1.9L19 23l-.9-2.1L16 20l2.1-.9L19 17Z"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7M12 19V5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-drum" viewBox="0 0 24 24"><ellipse cx="12" cy="7" rx="9" ry="4"/><path d="M3 7v9c0 2.2 4 4 9 4s9-1.8 9-4V7M7 10.5V19M17 10.5V19M12 11v9"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2Z"/></symbol>
+</svg>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header id="header">
+  <div class="header-in">
+    <button class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <span class="brand-drum"><svg class="icon"><use href="#i-drum"/></svg></span>
+      <span class="brand-name">Tabla</span>
+      <span class="brand-city">Montréal</span>
+    </button>
+    <nav class="topnav" id="topnav"></nav>
+    <div class="header-right">
+      <div class="lang-toggle">
+        <button id="btn-fr" onclick="setLang('fr')">FR</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="cta-mini" data-i18n="nav.book" onclick="go('book')"></button>
+      <button class="burger" id="burger" aria-label="Menu" onclick="toggleDrawer()"><svg class="icon" style="font-size:22px"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+  <div class="drawer" id="drawer"></div>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="ember1"></div><div class="ember2"></div>
+  <div class="hero-dots"></div>
+  <svg class="mandala" viewBox="0 0 400 400" fill="none" stroke="#D4AF37" aria-hidden="true">
+    <circle cx="200" cy="200" r="190" stroke-width=".6" stroke-dasharray="2 10"/>
+    <circle cx="200" cy="200" r="150" stroke-width=".6" stroke-dasharray="1 6"/>
+    <circle cx="200" cy="200" r="110" stroke-width=".6"/>
+    <g id="spokes" stroke-width=".5"></g>
+  </svg>
+  <div class="hero-fade"></div>
+  <div class="hero-in">
+    <p class="eyebrow fade-up d1" data-i18n="hero.eyebrow"></p>
+    <h1 class="fade-up d2"><span data-i18n="hero.title1"></span><br/><em data-i18n="hero.title2"></em></h1>
+    <p class="hero-sub fade-up d3" data-i18n="hero.sub"></p>
+    <div class="hero-ctas fade-up d4">
+      <button class="btn-gold" onclick="go('book')"><svg class="icon" style="font-size:16px"><use href="#i-cal"/></svg><span data-i18n="hero.cta1"></span></button>
+      <button class="btn-ghost" onclick="go('menu')"><span data-i18n="hero.cta2"></span><svg class="icon" style="font-size:16px"><use href="#i-chev-r"/></svg></button>
+    </div>
+    <div class="hero-perks fade-up d5">
+      <span><svg class="icon"><use href="#i-wine"/></svg><i data-i18n="hero.byow" style="font-style:normal"></i></span>
+      <span><svg class="icon"><use href="#i-spark"/></svg><i data-i18n="hero.terrace" style="font-style:normal"></i></span>
+      <span><svg class="icon"><use href="#i-star"/></svg><i data-i18n="hero.est" style="font-style:normal"></i></span>
+    </div>
+  </div>
+  <button class="scroll-cue" onclick="go('about')"><span data-i18n="hero.scroll"></span><svg class="icon" style="font-size:16px"><use href="#i-chev-d"/></svg></button>
+</section>
+
+<!-- ═══════════ MARQUEE ═══════════ -->
+<div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about" class="about"><div class="wrap about-grid">
+  <div data-reveal>
+    <p class="eyebrow" data-i18n="about.eyebrow"></p>
+    <h2 class="h2" data-i18n="about.title"></h2>
+    <p data-i18n="about.p1"></p>
+    <p data-i18n="about.p2"></p>
+    <div class="about-byow"><svg class="icon" style="font-size:18px"><use href="#i-wine"/></svg>Apportez votre vin</div>
+  </div>
+  <div class="stats" data-reveal id="stats"></div>
+</div></section>
+
+<!-- ═══════════ MENU ═══════════ -->
+<section id="menu" class="menu-sec"><div class="wrap">
+  <div class="menu-head" data-reveal>
+    <div>
+      <p class="eyebrow" data-i18n="menu.eyebrow"></p>
+      <h2 class="h2" data-i18n="menu.title"></h2>
+      <p class="lead" data-i18n="menu.sub"></p>
+    </div>
+    <div class="filters" id="filters" role="tablist"></div>
+  </div>
+  <div class="menu-grid" id="menu-grid"></div>
+  <p class="menu-note" data-reveal><svg class="icon"><use href="#i-leaf"/></svg><span data-i18n="menu.note"></span></p>
+</div></section>
+
+<!-- ═══════════ TESTIMONIALS ═══════════ -->
+<section class="reviews"><div class="wrap">
+  <div data-reveal style="text-align:center">
+    <p class="eyebrow center" data-i18n="reviews.eyebrow"></p>
+    <h2 class="h2" data-i18n="reviews.title"></h2>
+    <div class="ornament"><span></span></div>
+  </div>
+  <div class="rev-grid" id="rev-grid"></div>
+</div></section>
+
+<!-- ═══════════ BOOKING ═══════════ -->
+<section id="book" class="book-sec">
+  <div class="book-glow"></div>
+  <div class="book-wrap">
+    <div data-reveal style="text-align:center">
+      <p class="eyebrow center" data-i18n="book.eyebrow"></p>
+      <h2 class="h2" data-i18n="book.title"></h2>
+      <p class="lead" style="margin-left:auto;margin-right:auto;max-width:420px" data-i18n="book.sub"></p>
+    </div>
+    <div class="book-card" data-reveal>
+      <div id="book-form">
+        <div class="book-row">
+          <p class="book-label"><svg class="icon"><use href="#i-users"/></svg><span data-i18n="book.guests"></span></p>
+          <div class="guest-row" id="guest-row"></div>
+          <p class="bday" id="bday"><svg class="icon" style="font-size:14px;margin-top:2px"><use href="#i-spark"/></svg><span data-i18n="book.birthday"></span></p>
+        </div>
+        <div class="book-row">
+          <p class="book-label"><svg class="icon"><use href="#i-cal"/></svg><span data-i18n="book.date"></span></p>
+          <div class="date-row" id="date-row"></div>
+        </div>
+        <div class="book-row">
+          <p class="book-label"><svg class="icon"><use href="#i-clock"/></svg><span data-i18n="book.time"></span></p>
+          <div id="slots"><p class="slot-hint" data-i18n="book.selectAll"></p></div>
+        </div>
+        <div class="book-row">
+          <button class="confirm-btn" id="confirm" onclick="confirmBooking()" data-i18n="book.confirm"></button>
+        </div>
+      </div>
+      <div class="book-done" id="book-done">
+        <span class="done-ring"><svg class="icon" style="font-size:30px"><use href="#i-check"/></svg></span>
+        <h3 data-i18n="book.confirmedTitle"></h3>
+        <p class="done-sum" id="done-sum"></p>
+        <p class="done-note"><span data-i18n="book.confirmedBody"></span> <a href="tel:+15145236464">514&nbsp;523-6464</a>.</p>
+        <button class="again-btn" onclick="resetBooking()" data-i18n="book.newBooking"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HOURS & LOCATION ═══════════ -->
+<section id="hours" class="hours-sec"><div class="wrap">
+  <div data-reveal>
+    <p class="eyebrow" data-i18n="hours.eyebrow"></p>
+    <h2 class="h2" data-i18n="hours.title"></h2>
+  </div>
+  <div class="info-grid">
+    <div class="info-card" data-reveal>
+      <p class="book-label"><svg class="icon"><use href="#i-clock"/></svg><span data-i18n="hours.hoursTitle"></span></p>
+      <ul class="hours-list" id="hours-list"></ul>
+    </div>
+    <div class="info-card" id="location" data-reveal style="transition-delay:.12s">
+      <p class="book-label"><svg class="icon"><use href="#i-pin"/></svg><span data-i18n="hours.visit"></span></p>
+      <address class="addr">1329 Rue Sainte-Catherine E<br/>Montréal, QC H2L 2H4</address>
+      <p class="metro" data-i18n="hours.metro"></p>
+      <a class="dir-btn" href="https://maps.google.com/?q=1329+Rue+Sainte-Catherine+E,+Montréal,+QC+H2L+2H4" target="_blank" rel="noreferrer"><span data-i18n="hours.dirs"></span><svg class="icon" style="font-size:14px"><use href="#i-chev-r"/></svg></a>
+    </div>
+    <div class="info-card" data-reveal style="transition-delay:.24s">
+      <p class="book-label"><svg class="icon"><use href="#i-phone"/></svg><span data-i18n="hours.call"></span></p>
+      <a class="phone-big" href="tel:+15145236464">514 523-6464</a>
+      <div class="socials">
+        <a href="#" aria-label="Instagram"><svg class="icon" style="font-size:16px"><use href="#i-ig"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg class="icon" style="font-size:16px"><use href="#i-fb"/></svg></a>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer><div class="wrap">
+  <div class="foot-grid">
+    <div>
+      <p class="foot-brand"><svg class="icon"><use href="#i-drum"/></svg>Tabla</p>
+      <p class="foot-tag" data-i18n="footer.tag"></p>
+    </div>
+    <div>
+      <p class="foot-h" data-i18n="footer.explore"></p>
+      <div class="foot-links" id="foot-links"></div>
+    </div>
+    <div>
+      <p class="foot-h" data-i18n="footer.contact"></p>
+      <p class="foot-contact">1329 Rue Sainte-Catherine E<br/>Montréal, QC H2L 2H4<br/><a href="tel:+15145236464">514 523-6464</a></p>
+    </div>
+  </div>
+  <div class="ornament"><span></span></div>
+  <div class="foot-base">
+    <p>© <span id="year"></span> Restaurant Tabla. <span data-i18n="footer.rights"></span></p>
+    <button class="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span data-i18n="footer.top"></span><svg class="icon" style="font-size:12px"><use href="#i-up"/></svg></button>
+  </div>
+</div></footer>
+
+<!-- ═══════════ MOBILE BOTTOM NAV ═══════════ -->
+<nav class="bottom-nav" aria-label="Quick actions"><div class="bottom-nav-in" id="bottom-nav"></div></nav>
+
+<script>
+/* ═══════════ Translations ═══════════ */
+var T = {
+  en: {
+    nav:{menu:"Menu",book:"Reserve",hours:"Hours",location:"Find Us",about:"Our Story"},
+    hero:{eyebrow:"Fine Indian Cuisine · Le Village, Montréal",title1:"Where every spice",title2:"tells a story.",
+      sub:"Two decades of tandoor fire, hand-ground masalas and Montréal warmth — on Sainte-Catherine East since 2004.",
+      cta1:"Reserve a Table",cta2:"Explore the Menu",byow:"Bring your own wine",terrace:"Heated terrace",est:"Est. 2004",scroll:"Scroll"},
+    marquee:["Tandoori","Apportez votre vin","Table d'hôte","Halal","Vegetarian","Le Village","Since 2004"],
+    about:{eyebrow:"Our Story",title:"A rhythm of fire & spice",
+      p1:"Named for the drum that sets the pulse of Indian music, Tabla has been the Village's table for refined Indian cooking for over twenty years. Our chefs — each with more than fifteen years at the tandoor — grind, toast and blend every masala in-house.",
+      p2:"Recently renovated, intimate and glowing, our dining room and tented terrace sit right on Sainte-Catherine Street. Bring your favourite bottle: we are proudly apportez votre vin.",
+      stats:[["2004","Serving the Village since"],["15+","Years of chef experience"],["100%","Masalas ground in-house"]]},
+    menu:{eyebrow:"The Menu",title:"Crafted over charcoal & clay",
+      sub:"A living menu of tandoori classics, slow-simmered curries and garden-driven vegetarian plates.",
+      filters:{all:"All",starters:"Starters",mains:"Mains",drinks:"Drinks & Sweets"},
+      tags:{vegan:"Vegan",gf:"GF",veg:"Veg",spicy:"Spicy"},signature:"Signature",
+      note:"Table d'hôte available daily · Halal · Vegetarian friendly"},
+    reviews:{eyebrow:"Word of Mouth",title:"Loved by the Village",items:[
+      ["The onion bhaji might be the best I've had in any Indian restaurant — and the table d'hôte is remarkable value.","Google review"],
+      ["Recently renovated, intimate and stylish. The butter chicken and fresh naan keep us coming back.","RestoMontréal"],
+      ["The terrace right on Sainte-Catherine, a bottle of our own wine, impeccable service. A perfect Village evening.","TripAdvisor"]]},
+    book:{eyebrow:"Reservations",title:"Your table awaits",
+      sub:"Choose your party, pick a moment — we'll keep the tandoor warm.",
+      guests:"Guests",guest:"guest",guestsPl:"guests",date:"Date",time:"Time",lunch:"Lunch",dinner:"Dinner",
+      confirm:"Request Reservation",confirmedTitle:"Request received!",
+      confirmedBody:"We'll confirm shortly by phone. For same-day tables, call us at",
+      newBooking:"Make another request",closed:"Closed on Mondays",
+      birthday:"Celebrating? Free birthday meal for groups of 6+ — mention it when we call.",
+      selectAll:"Select a date and time to continue"},
+    hours:{eyebrow:"Hours & Location",title:"In the heart of the Village",hoursTitle:"Opening Hours",
+      visit:"Visit Us",call:"Call Us",dirs:"Get Directions",metro:"2 min from Beaudry metro",
+      rows:[["Monday","Closed",1],["Tue – Thu","11:30 – 14:30 · 17:00 – 22:30",0],["Friday","11:30 – 14:30 · 17:00 – 23:00",0],["Sat – Sun","16:00 – 23:00",0]]},
+    footer:{tag:"Fine Indian cuisine · Bring your own wine",explore:"Explore",contact:"Contact",rights:"All rights reserved.",top:"Back to top"}
+  },
+  fr: {
+    nav:{menu:"Menu",book:"Réserver",hours:"Horaires",location:"Nous trouver",about:"Notre histoire"},
+    hero:{eyebrow:"Fine cuisine indienne · Le Village, Montréal",title1:"Là où chaque épice",title2:"raconte une histoire.",
+      sub:"Vingt ans de feu tandoor, de masalas moulus à la main et de chaleur montréalaise — sur Sainte-Catherine Est depuis 2004.",
+      cta1:"Réserver une table",cta2:"Découvrir le menu",byow:"Apportez votre vin",terrace:"Terrasse chauffée",est:"Depuis 2004",scroll:"Défiler"},
+    marquee:["Tandoori","Apportez votre vin","Table d'hôte","Halal","Végétarien","Le Village","Depuis 2004"],
+    about:{eyebrow:"Notre histoire",title:"Un rythme de feu et d'épices",
+      p1:"Nommé d'après le tambour qui donne le pouls de la musique indienne, Tabla est la table du Village pour la cuisine indienne raffinée depuis plus de vingt ans. Nos chefs — chacun avec plus de quinze ans au tandoor — moulent, torréfient et assemblent chaque masala sur place.",
+      p2:"Récemment rénovée, intime et chaleureuse, notre salle et notre terrasse couverte donnent directement sur la rue Sainte-Catherine. Apportez votre bouteille préférée : nous sommes fièrement apportez votre vin.",
+      stats:[["2004","Au service du Village depuis"],["15+","Années d'expérience des chefs"],["100%","Masalas moulus sur place"]]},
+    menu:{eyebrow:"Le Menu",title:"Façonné au charbon et à l'argile",
+      sub:"Un menu vivant de classiques tandoori, de currys mijotés et d'assiettes végétariennes du jardin.",
+      filters:{all:"Tout",starters:"Entrées",mains:"Plats",drinks:"Boissons & Douceurs"},
+      tags:{vegan:"Végane",gf:"SG",veg:"Végé",spicy:"Épicé"},signature:"Signature",
+      note:"Table d'hôte offerte tous les jours · Halal · Options végétariennes"},
+    reviews:{eyebrow:"Bouche à oreille",title:"Adoré par le Village",items:[
+      ["Le bhaji à l'oignon est peut-être le meilleur que j'aie mangé dans un restaurant indien — et la table d'hôte offre un rapport qualité-prix remarquable.","Avis Google"],
+      ["Récemment rénové, intime et élégant. Le poulet au beurre et le naan frais nous font toujours revenir.","RestoMontréal"],
+      ["La terrasse directement sur Sainte-Catherine, notre propre bouteille de vin, un service impeccable. Une soirée parfaite dans le Village.","TripAdvisor"]]},
+    book:{eyebrow:"Réservations",title:"Votre table vous attend",
+      sub:"Choisissez votre groupe, votre moment — nous gardons le tandoor bien chaud.",
+      guests:"Convives",guest:"convive",guestsPl:"convives",date:"Date",time:"Heure",lunch:"Midi",dinner:"Soir",
+      confirm:"Demander une réservation",confirmedTitle:"Demande reçue !",
+      confirmedBody:"Nous confirmerons sous peu par téléphone. Pour une table le jour même, appelez-nous au",
+      newBooking:"Faire une autre demande",closed:"Fermé le lundi",
+      birthday:"Un anniversaire ? Repas gratuit pour les groupes de 6+ — mentionnez-le lors de notre appel.",
+      selectAll:"Choisissez une date et une heure pour continuer"},
+    hours:{eyebrow:"Horaires & Adresse",title:"Au cœur du Village",hoursTitle:"Heures d'ouverture",
+      visit:"Nous visiter",call:"Nous appeler",dirs:"Itinéraire",metro:"À 2 min du métro Beaudry",
+      rows:[["Lundi","Fermé",1],["Mar – Jeu","11 h 30 – 14 h 30 · 17 h – 22 h 30",0],["Vendredi","11 h 30 – 14 h 30 · 17 h – 23 h",0],["Sam – Dim","16 h – 23 h",0]]},
+    footer:{tag:"Fine cuisine indienne · Apportez votre vin",explore:"Explorer",contact:"Contact",rights:"Tous droits réservés.",top:"Haut de page"}
+  }
+};
+
+/* ═══════════ Menu data ═══════════ */
+var MENU = [
+  {id:1,cat:"starters",price:"9",glyph:"B",tint:["#5A3A12","#241708"],tags:["vegan","gf"],
+    en:["Onion Bhaji","Crisp chickpea-battered onion fritters, tamarind chutney."],
+    fr:["Bhaji à l'oignon","Beignets d'oignon croustillants, chutney au tamarin."]},
+  {id:2,cat:"starters",price:"8",glyph:"S",tint:["#4C3A16","#1E160A"],tags:["veg"],
+    en:["Vegetable Samosas","Hand-folded pastry, spiced potato & green pea, mint raita."],
+    fr:["Samosas aux légumes","Feuilleté plié à la main, pommes de terre épicées, raïta à la menthe."]},
+  {id:3,cat:"starters",price:"14",glyph:"T",tint:["#642A10","#22110A"],tags:["gf"],
+    en:["Chicken Tikka","Yogurt & kashmiri chili marinade, charred in the tandoor."],
+    fr:["Poulet Tikka","Marinade au yogourt et piment du Cachemire, grillé au tandoor."]},
+  {id:4,cat:"mains",price:"22",glyph:"B",tint:["#6E3B10","#291507"],tags:["gf"],star:1,
+    en:["Butter Chicken","Our signature — velvet tomato-cashew sauce, fenugreek, cream."],
+    fr:["Poulet au beurre","Notre signature — sauce veloutée tomate-cajou, fenugrec, crème."]},
+  {id:5,cat:"mains",price:"23",glyph:"M",tint:["#61300F","#241208"],tags:["gf"],
+    en:["Chicken Tikka Masala","Tandoor-charred chicken folded into a warm masala gravy."],
+    fr:["Poulet Tikka Masala","Poulet grillé au tandoor nappé d'une sauce masala parfumée."]},
+  {id:6,cat:"mains",price:"24",glyph:"K",tint:["#5C2410","#200E08"],tags:["spicy","gf"],
+    en:["Karahi Gosht","Lamb seared in an iron karahi, ginger, tomato & whole spices."],
+    fr:["Karahi Gosht","Agneau saisi au karahi de fer, gingembre, tomate et épices entières."]},
+  {id:7,cat:"mains",price:"23",glyph:"P",tint:["#3E3A14","#181507"],tags:["spicy","gf"],
+    en:["Bengal Fish Curry","Mustard-seed curry, curry leaf, coastal Bengal style."],
+    fr:["Curry de poisson du Bengale","Curry aux graines de moutarde, à la façon du Bengale."]},
+  {id:8,cat:"mains",price:"19",glyph:"P",tint:["#2E4016","#131A08"],tags:["veg","gf"],
+    en:["Palak Paneer","House paneer in slow-wilted spinach, cumin & garlic tarka."],
+    fr:["Palak Paneer","Paneer maison dans des épinards fondants, tarka au cumin et à l'ail."]},
+  {id:9,cat:"mains",price:"18",glyph:"C",tint:["#4A3C12","#1C1608"],tags:["vegan","gf"],
+    en:["Chana Masala","Chickpeas simmered with amchur, onion & warming garam masala."],
+    fr:["Chana Masala","Pois chiches mijotés à l'amchur, à l'oignon et au garam masala."]},
+  {id:10,cat:"drinks",price:"6",glyph:"L",tint:["#6E5210","#291E07"],tags:["veg","gf"],
+    en:["Mango Lassi","Alphonso mango whipped with house yogurt & cardamom."],
+    fr:["Lassi à la mangue","Mangue Alphonso fouettée au yogourt maison et à la cardamome."]},
+  {id:11,cat:"drinks",price:"5",glyph:"C",tint:["#4C3018","#1D1309"],tags:["veg"],
+    en:["Masala Chai","Black tea steeped with ginger, clove & green cardamom."],
+    fr:["Chai Masala","Thé noir infusé au gingembre, au clou de girofle et à la cardamome."]},
+  {id:12,cat:"drinks",price:"9",glyph:"M",tint:["#6E4A10","#2A1C07"],tags:["veg"],star:1,
+    en:["Mango Cheesecake","Guest favourite — silky mango cheesecake, pistachio dust."],
+    fr:["Gâteau au fromage à la mangue","Favori des habitués — gâteau soyeux à la mangue, pistache."]}
+];
+
+/* ═══════════ State ═══════════ */
+var lang = "fr", filter = "all", guests = 2, dateKey = null, timeSel = null;
+
+function t(path){ var o = T[lang]; path.split(".").forEach(function(k){ o = o[k]; }); return o; }
+function go(id){ var el = document.getElementById(id); if(el) el.scrollIntoView({behavior:"smooth",block:"start"}); closeDrawer(); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+/* ═══════════ Booking helpers (real Tabla hours) ═══════════ */
+function buildDates(){
+  var fmt = new Intl.DateTimeFormat(lang==="fr"?"fr-CA":"en-CA",{weekday:"short",month:"short",day:"numeric"});
+  var out = [], d = new Date();
+  while(out.length < 12){
+    d.setDate(d.getDate()+1);
+    out.push({key:d.toISOString().slice(0,10), label:fmt.format(d), day:d.getDay(), closed:d.getDay()===1});
+  }
+  return out;
+}
+function slotsFor(day){
+  var lunch = (day>=2 && day<=5) ? ["11:30","12:00","12:30","13:00","13:30"] : [];
+  var start = (day===0||day===6)?16:17, end = (day>=5||day===0)?21.5:21, dinner=[];
+  for(var x=start; x<=end; x+=0.5) dinner.push(Math.floor(x)+":"+(x%1?"30":"00"));
+  return {lunch:lunch, dinner:dinner};
+}
+var DATES = buildDates();
+
+/* ═══════════ Renderers ═══════════ */
+function renderStatic(){
+  document.querySelectorAll("[data-i18n]").forEach(function(el){ el.textContent = t(el.getAttribute("data-i18n")); });
+  document.documentElement.lang = lang;
+  document.getElementById("btn-fr").classList.toggle("active", lang==="fr");
+  document.getElementById("btn-en").classList.toggle("active", lang==="en");
+}
+function renderNavs(){
+  var links = [["menu",t("nav.menu")],["book",t("nav.book")],["hours",t("nav.hours")],["about",t("nav.about")]];
+  var h = links.map(function(l){ return '<button onclick="go(\''+l[0]+'\')">'+esc(l[1])+'</button>'; }).join("");
+  document.getElementById("topnav").innerHTML = h;
+  document.getElementById("drawer").innerHTML = h;
+  document.getElementById("foot-links").innerHTML = h;
+  var bn = [["menu",t("nav.menu"),"i-fork"],["book",t("nav.book"),"i-cal"],["hours",t("nav.hours"),"i-clock"],["location",t("nav.location"),"i-pin"]];
+  document.getElementById("bottom-nav").innerHTML = bn.map(function(b){
+    return '<button onclick="go(\''+b[0]+'\')"><svg class="icon"><use href="#'+b[2]+'"/></svg><span>'+esc(b[1])+'</span></button>';
+  }).join("");
+}
+function renderMarquee(){
+  var w = t("marquee"), loop = w.concat(w,w,w);
+  document.getElementById("marquee").innerHTML = loop.map(function(x){ return "<span>"+esc(x)+"</span>"; }).join("");
+}
+function renderStats(){
+  document.getElementById("stats").innerHTML = t("about.stats").map(function(s){
+    return '<div class="stat"><b>'+esc(s[0])+'</b><span>'+esc(s[1])+'</span></div>';
+  }).join("");
+}
+function renderFilters(){
+  var f = t("menu.filters");
+  document.getElementById("filters").innerHTML = Object.keys(f).map(function(k){
+    return '<button role="tab" class="'+(filter===k?"active":"")+'" aria-selected="'+(filter===k)+'" onclick="setFilter(\''+k+'\')">'+esc(f[k])+'</button>';
+  }).join("");
+}
+function renderMenu(){
+  var items = filter==="all" ? MENU : MENU.filter(function(m){ return m.cat===filter; });
+  document.getElementById("menu-grid").innerHTML = items.map(function(m,i){
+    var d = m[lang];
+    var tags = m.tags.map(function(tg){ return '<span class="tag">'+esc(t("menu.tags")[tg])+'</span>'; }).join("");
+    var star = m.star ? '<span class="dish-star">★ '+esc(t("menu.signature"))+'</span>' : "";
+    return '<article class="dish" data-reveal style="transition-delay:'+((i%3)*90)+'ms">'
+      + '<div class="dish-art" style="background:linear-gradient(135deg,'+m.tint[0]+','+m.tint[1]+')">'
+      + '<span class="dish-glyph">'+m.glyph+'</span><span class="dish-price">$'+m.price+'</span>'+star+'</div>'
+      + '<div class="dish-body"><div><h3>'+esc(d[0])+'</h3><p class="dish-desc">'+esc(d[1])+'</p></div>'
+      + '<div class="dish-tags">'+tags+'</div></div></article>';
+  }).join("");
+  observeReveals();
+}
+function renderReviews(){
+  document.getElementById("rev-grid").innerHTML = t("reviews.items").map(function(r,i){
+    return '<figure class="rev" data-reveal style="transition-delay:'+(i*120)+'ms"><div class="rev-mark">«</div>'
+      + '<blockquote>'+esc(r[0])+'</blockquote>'
+      + '<figcaption class="rev-foot"><span class="rev-src">'+esc(r[1])+'</span><span class="rev-stars">★★★★★</span></figcaption></figure>';
+  }).join("");
+  observeReveals();
+}
+function renderHours(){
+  document.getElementById("hours-list").innerHTML = t("hours.rows").map(function(r){
+    return '<li class="'+(r[2]?"closed":"")+'"><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></li>';
+  }).join("");
+}
+function renderGuests(){
+  var h = "";
+  for(var n=1;n<=8;n++){ h += '<button class="'+(guests===n?"active":"")+'" aria-pressed="'+(guests===n)+'" onclick="setGuests('+n+')">'+n+'</button>'; }
+  document.getElementById("guest-row").innerHTML = h;
+  document.getElementById("bday").classList.toggle("show", guests>=6);
+}
+function renderDates(){
+  document.getElementById("date-row").innerHTML = DATES.map(function(d){
+    return '<button '+(d.closed?'disabled title="'+esc(t("book.closed"))+'"':'')
+      + ' class="'+(dateKey===d.key?"active":"")+'" onclick="setDate(\''+d.key+'\')">'+esc(d.label)+'</button>';
+  }).join("");
+}
+function renderSlots(){
+  var box = document.getElementById("slots");
+  var sel = DATES.find(function(d){ return d.key===dateKey; });
+  if(!sel || sel.closed){ box.innerHTML = '<p class="slot-hint">'+esc(t("book.selectAll"))+'</p>'; return; }
+  var s = slotsFor(sel.day), h = "";
+  function group(title, arr){
+    if(!arr.length) return "";
+    return '<div class="slot-group"><h4>'+esc(title)+'</h4><div class="slot-list">'
+      + arr.map(function(x){ return '<button class="'+(timeSel===x?"active":"")+'" onclick="setTime(\''+x+'\')">'+x+'</button>'; }).join("")
+      + '</div></div>';
+  }
+  h += group(t("book.lunch"), s.lunch);
+  h += group(t("book.dinner"), s.dinner);
+  box.innerHTML = h;
+}
+function renderConfirm(){
+  document.getElementById("confirm").classList.toggle("ready", !!(dateKey && timeSel));
+}
+function renderAll(){
+  renderStatic(); renderNavs(); renderMarquee(); renderStats();
+  renderFilters(); renderMenu(); renderReviews(); renderHours();
+  renderGuests(); renderDates(); renderSlots(); renderConfirm();
+}
+
+/* ═══════════ Actions ═══════════ */
+function setLang(l){ lang = l; DATES = buildDates(); renderAll(); }
+function setFilter(f){ filter = f; renderFilters(); renderMenu(); }
+function setGuests(n){ guests = n; renderGuests(); }
+function setDate(k){ dateKey = k; timeSel = null; renderDates(); renderSlots(); renderConfirm(); }
+function setTime(x){ timeSel = x; renderSlots(); renderConfirm(); }
+function confirmBooking(){
+  if(!dateKey || !timeSel) return;
+  var sel = DATES.find(function(d){ return d.key===dateKey; });
+  document.getElementById("done-sum").textContent =
+    guests+" "+(guests>1?t("book.guestsPl"):t("book.guest"))+" · "+sel.label+" · "+timeSel;
+  document.getElementById("book-form").style.display = "none";
+  document.getElementById("book-done").classList.add("show");
+}
+function resetBooking(){
+  guests = 2; dateKey = null; timeSel = null;
+  document.getElementById("book-form").style.display = "";
+  document.getElementById("book-done").classList.remove("show");
+  renderGuests(); renderDates(); renderSlots(); renderConfirm();
+}
+function toggleDrawer(){
+  var d = document.getElementById("drawer"), open = d.classList.toggle("open");
+  document.getElementById("burger").innerHTML = '<svg class="icon" style="font-size:22px"><use href="#i-'+(open?"x":"menu")+'"/></svg>';
+}
+function closeDrawer(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("burger").innerHTML = '<svg class="icon" style="font-size:22px"><use href="#i-menu"/></svg>';
+}
+
+/* ═══════════ Effects ═══════════ */
+var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add("revealed"); });
+},{threshold:.12}) : null;
+function observeReveals(){
+  document.querySelectorAll("[data-reveal]:not(.revealed)").forEach(function(el){
+    if(io) io.observe(el); else el.classList.add("revealed");
+  });
+}
+window.addEventListener("scroll", function(){
+  document.getElementById("header").classList.toggle("scrolled", window.scrollY > 40);
+},{passive:true});
+
+/* Mandala spokes */
+(function(){
+  var g = document.getElementById("spokes"), h = "";
+  for(var i=0;i<24;i++){
+    var a = i*Math.PI*2/24;
+    h += '<line x1="'+(200+Math.cos(a)*150)+'" y1="'+(200+Math.sin(a)*150)+'" x2="'+(200+Math.cos(a)*190)+'" y2="'+(200+Math.sin(a)*190)+'"/>';
+  }
+  g.innerHTML = h;
+})();
+
+/* ═══════════ Init ═══════════ */
+document.getElementById("year").textContent = new Date().getFullYear();
+renderAll();
+observeReveals();
+</script>
+</body>
 </html>
