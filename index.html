@@ -157,7 +157,7 @@ header.scrolled{background:rgba(11,11,10,.85);backdrop-filter:blur(16px);-webkit
 @media(min-width:1024px){.menu-grid{grid-template-columns:1fr 1fr 1fr}}
 .dish{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card);transition:transform .5s,border-color .5s,box-shadow .5s}
 .dish:hover{transform:translateY(-6px);border-color:var(--gold-line);box-shadow:0 28px 70px -24px rgba(212,175,55,.28)}
-.dish-art{position:relative;height:145px;overflow:hidden}
+.dish-art{position:relative;height:190px;overflow:hidden}
 .dish-art::before{content:"";position:absolute;inset:0;opacity:.12;background-image:radial-gradient(circle at 1px 1px,var(--gold) 1px,transparent 0);background-size:22px 22px}
 .dish-art::after{content:"";position:absolute;inset:auto 0 0;height:48px;background:linear-gradient(0deg,var(--card),transparent)}
 .dish-glyph{position:absolute;right:-8px;bottom:-26px;font-family:var(--display);font-size:120px;line-height:1;color:rgba(212,175,55,.22);transition:transform .7s,color .7s;user-select:none}
@@ -174,6 +174,16 @@ header.scrolled{background:rgba(11,11,10,.85);backdrop-filter:blur(16px);-webkit
 .dish:hover .tag{border-color:var(--gold-line);color:var(--gold)}
 .menu-note{margin-top:40px;display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
 .menu-note .icon{color:var(--gold);font-size:14px}
+
+.dish-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.dish:hover .dish-img{transform:scale(1.08)}
+.dish-art .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,10,.35),transparent 40%,rgba(19,18,16,.25))}
+.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+.hero-shade{position:absolute;inset:0;background:rgba(11,11,10,.45)}
+.about-photo{position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--gold-line);margin-bottom:20px}
+.about-photo img{width:100%;height:260px;object-fit:cover;display:block;transition:transform .7s}
+.about-photo:hover img{transform:scale(1.05)}
+.about-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(11,11,10,.55));pointer-events:none}
 
 /* ═══════════ Testimonials ═══════════ */
 .reviews{border-top:1px solid var(--line);background:var(--ink);padding:96px 0}
@@ -333,6 +343,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 128px}
 <!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
   <div class="hero-bg"></div>
+  <img class="hero-photo" src="https://images.unsplash.com/photo-1542367592-8849eb950fd8?q=80&w=1800&auto=format&fit=crop" alt="" loading="eager" onerror="this.remove()" />
+  <div class="hero-shade"></div>
   <div class="ember1"></div><div class="ember2"></div>
   <div class="hero-dots"></div>
   <svg class="mandala" viewBox="0 0 400 400" fill="none" stroke="#D4AF37" aria-hidden="true">
@@ -371,7 +383,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 128px}
     <p data-i18n="about.p2"></p>
     <div class="about-byow"><svg class="icon" style="font-size:18px"><use href="#i-wine"/></svg>Apportez votre vin</div>
   </div>
-  <div class="stats" data-reveal id="stats"></div>
+  <div data-reveal>
+    <div class="about-photo"><img src="https://images.unsplash.com/photo-1728910156510-77488f19b152?q=80&w=1000&auto=format&fit=crop" alt="Indian dishes on a shared table" loading="lazy" onerror="this.parentElement.remove()" /></div>
+    <div class="stats" id="stats"></div>
+  </div>
 </div></section>
 
 <!-- ═══════════ MENU ═══════════ -->
@@ -562,40 +577,40 @@ var T = {
 
 /* ═══════════ Menu data ═══════════ */
 var MENU = [
-  {id:1,cat:"starters",price:"9",glyph:"B",tint:["#5A3A12","#241708"],tags:["vegan","gf"],
+  {id:1,img:"https://images.unsplash.com/photo-1631452180539-96aca7d48617?q=80&w=900&auto=format&fit=crop",cat:"starters",price:"9",glyph:"B",tint:["#5A3A12","#241708"],tags:["vegan","gf"],
     en:["Onion Bhaji","Crisp chickpea-battered onion fritters, tamarind chutney."],
     fr:["Bhaji à l'oignon","Beignets d'oignon croustillants, chutney au tamarin."]},
-  {id:2,cat:"starters",price:"8",glyph:"S",tint:["#4C3A16","#1E160A"],tags:["veg"],
+  {id:2,img:"https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=900&auto=format&fit=crop",cat:"starters",price:"8",glyph:"S",tint:["#4C3A16","#1E160A"],tags:["veg"],
     en:["Vegetable Samosas","Hand-folded pastry, spiced potato & green pea, mint raita."],
     fr:["Samosas aux légumes","Feuilleté plié à la main, pommes de terre épicées, raïta à la menthe."]},
-  {id:3,cat:"starters",price:"14",glyph:"T",tint:["#642A10","#22110A"],tags:["gf"],
+  {id:3,img:"https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=900&auto=format&fit=crop",cat:"starters",price:"14",glyph:"T",tint:["#642A10","#22110A"],tags:["gf"],
     en:["Chicken Tikka","Yogurt & kashmiri chili marinade, charred in the tandoor."],
     fr:["Poulet Tikka","Marinade au yogourt et piment du Cachemire, grillé au tandoor."]},
-  {id:4,cat:"mains",price:"22",glyph:"B",tint:["#6E3B10","#291507"],tags:["gf"],star:1,
+  {id:4,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=900&auto=format&fit=crop",cat:"mains",price:"22",glyph:"B",tint:["#6E3B10","#291507"],tags:["gf"],star:1,
     en:["Butter Chicken","Our signature — velvet tomato-cashew sauce, fenugreek, cream."],
     fr:["Poulet au beurre","Notre signature — sauce veloutée tomate-cajou, fenugrec, crème."]},
-  {id:5,cat:"mains",price:"23",glyph:"M",tint:["#61300F","#241208"],tags:["gf"],
+  {id:5,img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=900&auto=format&fit=crop",cat:"mains",price:"23",glyph:"M",tint:["#61300F","#241208"],tags:["gf"],
     en:["Chicken Tikka Masala","Tandoor-charred chicken folded into a warm masala gravy."],
     fr:["Poulet Tikka Masala","Poulet grillé au tandoor nappé d'une sauce masala parfumée."]},
-  {id:6,cat:"mains",price:"24",glyph:"K",tint:["#5C2410","#200E08"],tags:["spicy","gf"],
+  {id:6,img:"https://images.unsplash.com/photo-1596797038530-2c107229654b?q=80&w=900&auto=format&fit=crop",cat:"mains",price:"24",glyph:"K",tint:["#5C2410","#200E08"],tags:["spicy","gf"],
     en:["Karahi Gosht","Lamb seared in an iron karahi, ginger, tomato & whole spices."],
     fr:["Karahi Gosht","Agneau saisi au karahi de fer, gingembre, tomate et épices entières."]},
-  {id:7,cat:"mains",price:"23",glyph:"P",tint:["#3E3A14","#181507"],tags:["spicy","gf"],
+  {id:7,img:"https://images.unsplash.com/photo-1618449840665-9ed506d73a34?q=80&w=900&auto=format&fit=crop",cat:"mains",price:"23",glyph:"P",tint:["#3E3A14","#181507"],tags:["spicy","gf"],
     en:["Bengal Fish Curry","Mustard-seed curry, curry leaf, coastal Bengal style."],
     fr:["Curry de poisson du Bengale","Curry aux graines de moutarde, à la façon du Bengale."]},
-  {id:8,cat:"mains",price:"19",glyph:"P",tint:["#2E4016","#131A08"],tags:["veg","gf"],
+  {id:8,img:"https://images.unsplash.com/photo-1517244683847-7456b63c5969?q=80&w=900&auto=format&fit=crop",cat:"mains",price:"19",glyph:"P",tint:["#2E4016","#131A08"],tags:["veg","gf"],
     en:["Palak Paneer","House paneer in slow-wilted spinach, cumin & garlic tarka."],
     fr:["Palak Paneer","Paneer maison dans des épinards fondants, tarka au cumin et à l'ail."]},
-  {id:9,cat:"mains",price:"18",glyph:"C",tint:["#4A3C12","#1C1608"],tags:["vegan","gf"],
+  {id:9,img:"https://images.unsplash.com/photo-1606471191009-63994c53433b?q=80&w=900&auto=format&fit=crop",cat:"mains",price:"18",glyph:"C",tint:["#4A3C12","#1C1608"],tags:["vegan","gf"],
     en:["Chana Masala","Chickpeas simmered with amchur, onion & warming garam masala."],
     fr:["Chana Masala","Pois chiches mijotés à l'amchur, à l'oignon et au garam masala."]},
-  {id:10,cat:"drinks",price:"6",glyph:"L",tint:["#6E5210","#291E07"],tags:["veg","gf"],
+  {id:10,img:"https://images.unsplash.com/photo-1692620609860-be6717812f71?q=80&w=900&auto=format&fit=crop",cat:"drinks",price:"6",glyph:"L",tint:["#6E5210","#291E07"],tags:["veg","gf"],
     en:["Mango Lassi","Alphonso mango whipped with house yogurt & cardamom."],
     fr:["Lassi à la mangue","Mangue Alphonso fouettée au yogourt maison et à la cardamome."]},
-  {id:11,cat:"drinks",price:"5",glyph:"C",tint:["#4C3018","#1D1309"],tags:["veg"],
+  {id:11,img:"https://images.unsplash.com/photo-1636920272028-c27f1ae474c3?q=80&w=900&auto=format&fit=crop",cat:"drinks",price:"5",glyph:"C",tint:["#4C3018","#1D1309"],tags:["veg"],
     en:["Masala Chai","Black tea steeped with ginger, clove & green cardamom."],
     fr:["Chai Masala","Thé noir infusé au gingembre, au clou de girofle et à la cardamome."]},
-  {id:12,cat:"drinks",price:"9",glyph:"M",tint:["#6E4A10","#2A1C07"],tags:["veg"],star:1,
+  {id:12,img:"https://images.unsplash.com/photo-1727280213367-ecca818ba188?q=80&w=900&auto=format&fit=crop",cat:"drinks",price:"9",glyph:"M",tint:["#6E4A10","#2A1C07"],tags:["veg"],star:1,
     en:["Mango Cheesecake","Guest favourite — silky mango cheesecake, pistachio dust."],
     fr:["Gâteau au fromage à la mangue","Favori des habitués — gâteau soyeux à la mangue, pistache."]}
 ];
@@ -666,7 +681,9 @@ function renderMenu(){
     var star = m.star ? '<span class="dish-star">★ '+esc(t("menu.signature"))+'</span>' : "";
     return '<article class="dish" data-reveal style="transition-delay:'+((i%3)*90)+'ms">'
       + '<div class="dish-art" style="background:linear-gradient(135deg,'+m.tint[0]+','+m.tint[1]+')">'
-      + '<span class="dish-glyph">'+m.glyph+'</span><span class="dish-price">$'+m.price+'</span>'+star+'</div>'
+      + '<span class="dish-glyph">'+m.glyph+'</span>'
+      + (m.img ? '<img class="dish-img" src="'+m.img+'" alt="'+esc(d[0])+'" loading="lazy" onerror="this.remove()"/><span class="veil"></span>' : '')
+      + '<span class="dish-price">$'+m.price+'</span>'+star+'</div>'
       + '<div class="dish-body"><div><h3>'+esc(d[0])+'</h3><p class="dish-desc">'+esc(d[1])+'</p></div>'
       + '<div class="dish-tags">'+tags+'</div></div></article>';
   }).join("");
